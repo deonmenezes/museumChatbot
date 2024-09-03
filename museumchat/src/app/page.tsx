@@ -210,7 +210,7 @@ const Chatbot: React.FC = () => {
       {/* Footer */}
       <footer className="bg-gray-100 py-4">
         <p className="text-center text-gray-500 text-sm">
-          © 2024 City Museum. All rights reserved.
+          © 2024 Indian Museums. All rights reserved.
         </p>
       </footer>
     </div>
