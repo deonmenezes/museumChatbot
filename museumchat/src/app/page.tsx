@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { GoogleGenerativeAI } from "@google/generative-ai"
-
+import MuseumSearch from "./components/search.tsx"
 // Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
@@ -109,34 +109,7 @@ const Chatbot: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      <nav className="bg-[#698474] p-4">
-        <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <h1 className="text-[#FCF8F3] text-2xl font-bold">Museumaire</h1>
-          <ul className="flex space-x-4">
-            <li>
-              <Link href="/" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link href="/faqs" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
-                FAQs
-              </Link>
-            </li>
-            <li>
-              <Link href="/contact" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
-                Contact
-              </Link>
-            </li>
-            <li>
-              <Link href="/chatbot" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
-                Chatbot
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
+      
       {/* Main Content */}
       <div className="flex-grow bg-white p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">

@@ -6,32 +6,7 @@ import Museums from "../components/museums.tsx";
 const MuseumExplore = () => {
     return ( 
         <>
-        <header className="bg-white shadow">
-        <div className="container mx-auto flex flex-wrap items-center justify-between py-4 px-6">
-          <div className="text-green-600 text-2xl font-bold">
-            <h1>Museumaire</h1>
-          </div>
-          <nav className="w-full lg:w-auto mt-4 lg:mt-0">
-            <ul className="flex flex-wrap justify-center lg:justify-end space-x-6">
-              <li><a href="/chatbot" className="text-green-600 hover:text-green-800">Home</a></li>
-              <li><a href="/" className="text-green-600 hover:text-green-800">Chatbot</a></li>
-              <li><a href="/chatbot" className="text-green-600 hover:text-green-800">About Us</a></li>
-              <li><a href="#" className="text-green-600 hover:text-green-800">Contact Us</a></li>
-            </ul>
-          </nav>
-          <div className="flex flex-wrap justify-end space-x-4 mt-4 lg:mt-0">
-            <input 
-              type="text" 
-              placeholder="Search for products..." 
-              className="border border-green-600 rounded px-4 py-2 focus:outline-none focus:border-green-800 w-full lg:w-auto"
-            />
-            <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 w-full lg:w-auto">Search</button>
-          </div>
-          <div className="flex space-x-4 mt-4 lg:mt-0">
-            <a href="#" className="text-green-600 hover:text-green-800">Login</a>
-          </div>
-        </div>
-      </header>
+        
 
       <div id="controls-carousel" className="relative w-full" data-carousel="static">
         <div className="relative h-56 overflow-hidden rounded-lg md:h-96">

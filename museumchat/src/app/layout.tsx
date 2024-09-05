@@ -1,5 +1,7 @@
+import React from 'react';
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -16,7 +18,46 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <nav className="bg-[#698474] p-4">
+          <div className="flex justify-between items-center max-w-7xl mx-auto">
+            <h1 className="text-[#FCF8F3] text-2xl font-bold">Museumaire</h1>
+            <ul className="flex space-x-4">
+              <li>
+                <Link href="/" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
+                  Home
+                </Link>
+              </li>
+              <li>
+                <Link href="/faqs" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
+                  FAQs
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact.tsx" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="/chatbot" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
+                  Chatbot
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className="flex flex-wrap justify-end mt-4 lg:mt-0 lg:space-x-4">
+            <div className="flex w-full lg:w-auto">
+              <input 
+                type="text" 
+                placeholder="Search for museums.." 
+                className="border border-green-600 rounded-l px-4 py-2 focus:outline-none focus:border-green-800 w-full lg:w-auto"
+              />
+              <button className="bg-green-600 text-white px-4 py-2 rounded-r hover:bg-green-800 w-half lg:w-auto">Search</button>
+            </div>
+          </div>
+        </nav>
+        <main>{children}</main>
+      </body>
     </html>
   );
 }
