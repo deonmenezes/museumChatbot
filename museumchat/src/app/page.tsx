@@ -2,93 +2,152 @@
 
 import React, { useState, useRef, useEffect } from "react"
 import Link from "next/link"
-import { GoogleGenerativeAI } from "@google/generative-ai"
-
-// Initialize the Gemini API
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
 const Chatbot: React.FC = () => {
   const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState<{ text: string; sender: string }[]>([])
+  const [messages, setMessages] = useState<{ text: string; sender: string }[]>(
+    []
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [chatHeight, setChatHeight] = useState("40vh")
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const chatContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // State for language selection
   const [language, setLanguage] = useState("")
   const [isLanguageSelected, setIsLanguageSelected] = useState(false)
 
-  // Language options text
-  const languageOptions = {
+  const [formData, setFormData] = useState({
+    name: "",
+    // price: "",
+    email: "",
+    phone: "",
+    nationality: "",
+    // ticket_type: "",
+    visit_date: "",
+    visit_time: "",
+    adult_tickets: "",
+    child_tickets: "",
+    language: "",
+  })
+
+  const languageOptions: {
+    [key: string]: {
+      welcome: string
+      chooseLanguage: string
+      buttonLabel: string
+      languages: string[]
+    }
+  } = {
     english: {
-      welcome: "Hello! I'm MuseumBot, your AI assistant for all things museum-related. How can I help you today?",
-      chooseLanguage: "Please select your preferred language to start the chat:",
+      welcome:
+        "Hello! I'm MuseumBot, your AI assistant for booking museum tickets. How can I help you today?",
+      chooseLanguage:
+        "Please select your preferred language to start the chat:",
       buttonLabel: "Send",
       languages: ["English", "Hindi", "Marathi"],
     },
     hindi: {
-      welcome: "नमस्ते! मैं म्यूजियम बोट हूं, संग्रहालय से संबंधित सभी चीजों के लिए आपका एआई सहायक। मैं आपकी किस प्रकार सहायता कर सकता हूं?",
-      chooseLanguage: "कृपया चैट शुरू करने के लिए अपनी पसंदीदा भाषा का चयन करें:",
+      welcome:
+        "नमस्ते! मैं म्यूजियम बोट हूं, संग्रहालय से संबंधित सभी चीजों के लिए आपका एआई सहायक। मैं आपकी किस प्रकार सहायता कर सकता हूं?",
+      chooseLanguage:
+        "कृपया चैट शुरू करने के लिए अपनी पसंदीदा भाषा का चयन करें:",
       buttonLabel: "भेजें",
       languages: ["अंग्रेजी", "हिंदी", "मराठी"],
     },
     marathi: {
-      welcome: "नमस्कार! मी म्युझियम बॉट आहे, संग्रहालयाशी संबंधित सर्व गोष्टींसाठी तुमचा एआय सहायक. मी तुम्हाला कशी मदत करू शकतो?",
+      welcome:
+        "नमस्कार! मी म्युझियम बॉट आहे, संग्रहालयाशी संबंधित सर्व गोष्टींसाठी तुमचा एआय सहायक. मी तुम्हाला कशी मदत करू शकतो?",
       chooseLanguage: "कृपया चॅट सुरू करण्यासाठी तुमची आवडती भाषा निवडा:",
       buttonLabel: "पाठवा",
       languages: ["इंग्रजी", "हिंदी", "मराठी"],
     },
   }
 
-  const handleSendMessage = async () => {
-    if (message.trim() === "") return
-
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { text: message, sender: "user" },
+  const handleLanguageSelection = (selectedLanguage: string) => {
+    const lowerCaseLanguage = selectedLanguage.toLowerCase()
+    setLanguage(lowerCaseLanguage)
+    setIsLanguageSelected(true)
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      language: lowerCaseLanguage,
+    }))
+    setMessages([
+      {
+        text: languageOptions[lowerCaseLanguage].welcome,
+        sender: "bot",
+      },
     ])
-    setMessage("")
+  }
+
+  const handleSendMessage = async (inputValue: string) => {
+    if (inputValue.trim() === "") return
+
+    setMessages((prev) => [...prev, { text: inputValue, sender: "user" }])
     setIsLoading(true)
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const result = await model.generateContent(message);
-      const response = result.response;
-      const text = response.text();
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text, sender: "bot" },
-      ])
+      const response = await handleApiRequest(inputValue)
+      processApiResponse(response)
     } catch (error) {
-      console.error("Error generating response:", error)
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: "Sorry, I encountered an error. Please try again.", sender: "bot" },
+      console.error("Error:", error)
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Sorry, there was an error processing your request.",
+          sender: "bot",
+        },
       ])
     } finally {
       setIsLoading(false)
+      setMessage("")
     }
   }
 
-  const handleLanguageSelection = (selectedLanguage: string) => {
-    setLanguage(selectedLanguage.toLowerCase())
-    setIsLanguageSelected(true)
-    setMessages([{ text: languageOptions[selectedLanguage.toLowerCase()].welcome, sender: "bot" }])
+  const handleApiRequest = async (input: string) => {
+    const response = await fetch(
+      "https://museum-chatbot-api.onrender.com/chatGemini",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: input, formData }),
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    return await response.json()
+  }
+
+  const processApiResponse = (data: any) => {
+    const [jsonString, aiResponse] = data.message.split("\n")
+
+    try {
+      const parsedData = JSON.parse(jsonString)
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        ...parsedData,
+      }))
+      console.log("Updated form data:", parsedData)
+    } catch (error) {
+      console.error("Error parsing JSON:", error)
+    }
+
+    setMessages((prev) => [...prev, { text: aiResponse, sender: "bot" }])
   }
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-
-    // Dynamically adjust chat height
     const newHeight = Math.min(80, Math.max(40, messages.length * 10)) + "vh"
     setChatHeight(newHeight)
   }, [messages])
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSendMessage()
+      handleSendMessage(message)
     }
   }
 
@@ -105,17 +164,26 @@ const Chatbot: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link href="/faqs" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
+              <Link
+                href="/faqs"
+                className="text-[#FCF8F3] hover:text-[#FFD3B6]"
+              >
                 FAQs
               </Link>
             </li>
             <li>
-              <Link href="/contact" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
+              <Link
+                href="/contact"
+                className="text-[#FCF8F3] hover:text-[#FFD3B6]"
+              >
                 Contact
               </Link>
             </li>
             <li>
-              <Link href="/chatbot" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
+              <Link
+                href="/chatbot"
+                className="text-[#FCF8F3] hover:text-[#FFD3B6]"
+              >
                 Chatbot
               </Link>
             </li>
@@ -190,7 +258,10 @@ const Chatbot: React.FC = () => {
 
           {/* Chat Display Section */}
           {isLanguageSelected && (
-            <div className="border border-gray-200 rounded-lg shadow-md" ref={chatContainerRef}>
+            <div
+              className="border border-gray-200 rounded-lg shadow-md"
+              ref={chatContainerRef}
+            >
               <div
                 className="overflow-y-auto p-4 transition-all duration-300 ease-in-out"
                 style={{ height: chatHeight }}
@@ -236,10 +307,10 @@ const Chatbot: React.FC = () => {
                   />
                   <button
                     className="ml-2 bg-blue-500 text-white px-6 py-2 rounded-full shadow-sm hover:bg-blue-600 transition"
-                    onClick={handleSendMessage}
+                    onClick={() => handleSendMessage(message)}
                     disabled={isLoading}
                   >
-                    {languageOptions[language].buttonLabel || "send"}
+                    {languageOptions[language].buttonLabel || "Send"}
                   </button>
                 </div>
               </div>
