@@ -65,7 +65,7 @@ const Chatbot: React.FC = () => {
       {/* Navbar */}
       <nav className="bg-[#698474] p-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <h1 className="text-[#FCF8F3] text-2xl font-bold">City Museum</h1>
+          <h1 className="text-[#FCF8F3] text-2xl font-bold">Museumaire</h1>
           <ul className="flex space-x-4">
             <li>
               <Link href="/" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
@@ -80,14 +80,7 @@ const Chatbot: React.FC = () => {
                 FAQs
               </Link>
             </li>
-            <li>
-              <Link
-                href="/exhibition"
-                className="text-[#FCF8F3] hover:text-[#FFD3B6]"
-              >
-                Exhibitions
-              </Link>
-            </li>
+           
             <li>
               <Link
                 href="/contact"
@@ -118,7 +111,7 @@ const Chatbot: React.FC = () => {
               alt="MuseumBot"
               className="w-20 h-20 mx-auto rounded-full border-4 border-blue-600 mb-4"
             />
-            <h1 className="text-3xl font-bold text-blue-800">MuseumBot</h1>
+            <h1 className="text-3xl font-bold text-blue-800">Museumaire</h1>
             <p className="text-gray-700 mt-2">
               Hello! I'm MuseumBot, your AI assistant for all things museum-related.
             </p>

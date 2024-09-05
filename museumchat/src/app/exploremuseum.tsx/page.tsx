@@ -1,7 +1,7 @@
 import { FocusCards } from "@/app/components/ui/focus-cards";
 import { InfiniteMovingCards } from "@/app/components/ui/moving-cards";
 import Image from 'next/image';
-
+import Museums from "../components/museums.tsx";
 
 const MuseumExplore = () => {
     return ( 
@@ -9,7 +9,7 @@ const MuseumExplore = () => {
         <header className="bg-white shadow">
         <div className="container mx-auto flex flex-wrap items-center justify-between py-4 px-6">
           <div className="text-green-600 text-2xl font-bold">
-            <h1>Museum Chatbot</h1>
+            <h1>Museumaire</h1>
           </div>
           <nav className="w-full lg:w-auto mt-4 lg:mt-0">
             <ul className="flex flex-wrap justify-center lg:justify-end space-x-6">
@@ -108,26 +108,7 @@ const MuseumExplore = () => {
         </div>
       </section>
 
-      <section className="py-16 bg-green-50">
-        <div className="container mx-auto text-center">
-          <h3 className="text-3xl font-bold text-green-600 mb-8">Featured Museums</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
-              <Image src="/nexium-2.jpg" alt="Product Image" width={400} height={200} className="rounded-lg" />
-              <h4 className="mt-4 text-green-600 font-semibold">Premium Medicine</h4>
-              <p className="mt-2 text-gray-600">$19.99</p>
-              <a href="#" className="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800">Add to Cart</a>
-            </div>
-            <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center">
-              <Image src="/download (1).jpeg" alt="Product Image" width={300} height={100} className="rounded-lg" />
-              <h4 className="mt-4 text-green-600 font-semibold"> Ayurvedic Herbal Medicine</h4>
-              <p className="mt-2 text-gray-600">$29.99</p>
-              <a href="#" className="mt-4 inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800">Add to Cart</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
+      
       <footer className="bg-green-600 text-white py-10">
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
@@ -151,6 +132,7 @@ const MuseumExplore = () => {
           </div>
         </div>
       </footer>
+
     
         </>
      );
