@@ -15,54 +15,26 @@ const Chatbot: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const chatContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // New state for user information
-  const [userName, setUserName] = useState("")
-  const [userContact, setUserContact] = useState("")
-  const [ticketCount, setTicketCount] = useState("")
-  const [preferredMuseum, setPreferredMuseum] = useState("")
-  const [step, setStep] = useState(0) // Tracks the current step of user info collection
+  const handleSendMessage = async () => {
+    if (message.trim() === "") return
 
-  // Function to handle the flow of collecting user information
-  const handleUserInput = async (userMessage: string) => {
-    setMessages((prevMessages) => [...prevMessages, { text: userMessage, sender: "user" }])
-    
-    switch (step) {
-      case 0:
-        setUserName(userMessage)
-        setMessages((prevMessages) => [...prevMessages, { text: "Please provide your contact information.", sender: "bot" }])
-        setStep(1)
-        break
-      case 1:
-        setUserContact(userMessage)
-        setMessages((prevMessages) => [...prevMessages, { text: "How many tickets would you like to request?", sender: "bot" }])
-        setStep(2)
-        break
-      case 2:
-        setTicketCount(userMessage)
-        setMessages((prevMessages) => [...prevMessages, { text: "Which museum would you like to visit?", sender: "bot" }])
-        setStep(3)
-        break
-      case 3:
-        setPreferredMuseum(userMessage)
-        setMessages((prevMessages) => [...prevMessages, { text: `Thank you, ${userName}! You've requested ${ticketCount} ticket(s) for the ${userMessage}. How can I assist you today?`, sender: "bot" }])
-        setStep(4)
-        break
-      default:
-        await handleBotResponse(userMessage)
-        break
-    }
-  }
-
-  // Function to generate responses using the Generative AI API
-  const handleBotResponse = async (userMessage: string) => {
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { text: message, sender: "user" },
+    ])
+    setMessage("")
     setIsLoading(true)
-    try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" })
-      const result = await model.generateContent(userMessage)
-      const response = result.response
-      const text = response.text()
 
-      setMessages((prevMessages) => [...prevMessages, { text, sender: "bot" }])
+    try {
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const result = await model.generateContent(message);
+      const response = result.response;
+      const text = response.text();
+
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text, sender: "bot" },
+      ])
     } catch (error) {
       console.error("Error generating response:", error)
       setMessages((prevMessages) => [
@@ -74,15 +46,9 @@ const Chatbot: React.FC = () => {
     }
   }
 
-  const handleSendMessage = async () => {
-    if (message.trim() === "") return
-    await handleUserInput(message)
-    setMessage("")
-  }
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-
+    
     // Dynamically adjust chat height
     const newHeight = Math.min(80, Math.max(40, messages.length * 10)) + "vh"
     setChatHeight(newHeight)
@@ -156,7 +122,31 @@ const Chatbot: React.FC = () => {
             <p className="text-gray-700 mt-2">
               Hello! I'm MuseumBot, your AI assistant for all things museum-related.
             </p>
-            <p className="text-gray-700 mb-6">Please Provide Your Name down below to start conversation</p>
+            <p className="text-gray-700 mb-6">How can I help you today?</p>
+          </div>
+
+          {/* Service Options */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+            <Link href="/exploremuseum.tsx">
+              <button className="w-full bg-white border-2 border-blue-500 text-blue-500 px-4 py-2 rounded-xl flex items-center justify-center shadow-sm hover:bg-blue-500 hover:text-white transition">
+                🎟️ View Museums
+              </button>
+            </Link>
+            <Link href="/">
+              <button className="w-full bg-white border-2 border-red-500 text-red-500 px-4 py-2 rounded-xl flex items-center justify-center shadow-sm hover:bg-red-500 hover:text-white transition">
+                🖼️ View Exhibits
+              </button>
+            </Link>
+            <Link href="/">
+              <button className="w-full bg-white border-2 border-green-500 text-green-500 px-4 py-2 rounded-xl flex items-center justify-center shadow-sm hover:bg-green-500 hover:text-white transition">
+                🧑‍🏫 Guided Tours
+              </button>
+            </Link>
+            <Link href="/">
+              <button className="w-full bg-white border-2 border-purple-500 text-purple-500 px-4 py-2 rounded-xl flex items-center justify-center shadow-sm hover:bg-purple-500 hover:text-white transition">
+                🛒 Gift Shop
+              </button>
+            </Link>
           </div>
 
           {/* Chat Display Section */}
