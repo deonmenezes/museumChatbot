@@ -105,27 +105,17 @@ const Chatbot: React.FC = () => {
               </Link>
             </li>
             <li>
-              <Link
-                href="/faqs"
-                className="text-[#FCF8F3] hover:text-[#FFD3B6]"
-              >
+              <Link href="/faqs" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
                 FAQs
               </Link>
             </li>
-
             <li>
-              <Link
-                href="/contact"
-                className="text-[#FCF8F3] hover:text-[#FFD3B6]"
-              >
+              <Link href="/contact" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
                 Contact
               </Link>
             </li>
             <li>
-              <Link
-                href="/chatbot"
-                className="text-[#FCF8F3] hover:text-[#FFD3B6]"
-              >
+              <Link href="/chatbot" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
                 Chatbot
               </Link>
             </li>
@@ -172,6 +162,32 @@ const Chatbot: React.FC = () => {
             )}
           </div>
 
+          {/* Service Options - Display only after language selection */}
+          {isLanguageSelected && (
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+              <Link href="/exploremuseum.tsx">
+                <button className="w-full bg-white border-2 border-blue-500 text-blue-500 px-4 py-2 rounded-xl flex items-center justify-center shadow-sm hover:bg-blue-500 hover:text-white transition">
+                  🎟️ Museums
+                </button>
+              </Link>
+              <Link href="/">
+                <button className="w-full bg-white border-2 border-red-500 text-red-500 px-4 py-2 rounded-xl flex items-center justify-center shadow-sm hover:bg-red-500 hover:text-white transition">
+                  🖼️ View Exhibits
+                </button>
+              </Link>
+              <Link href="/">
+                <button className="w-full bg-white border-2 border-green-500 text-green-500 px-4 py-2 rounded-xl flex items-center justify-center shadow-sm hover:bg-green-500 hover:text-white transition">
+                  🧑‍🏫 Guided Tours
+                </button>
+              </Link>
+              <Link href="/">
+                <button className="w-full bg-white border-2 border-purple-500 text-purple-500 px-4 py-2 rounded-xl flex items-center justify-center shadow-sm hover:bg-purple-500 hover:text-white transition">
+                  🛒 Gift Shop
+                </button>
+              </Link>
+            </div>
+          )}
+
           {/* Chat Display Section */}
           {isLanguageSelected && (
             <div className="border border-gray-200 rounded-lg shadow-md" ref={chatContainerRef}>
@@ -200,7 +216,7 @@ const Chatbot: React.FC = () => {
                 {isLoading && (
                   <div className="flex justify-start mb-2">
                     <div className="bg-gray-200 text-gray-800 p-3 rounded-lg rounded-bl-none">
-                      {language === "hindi" ? "सोच रहा है..." : language === "marathi" ? "विचार करत आहे..." : "Thinking..."}
+                      Thinking...
                     </div>
                   </div>
                 )}
@@ -213,7 +229,7 @@ const Chatbot: React.FC = () => {
                   <input
                     type="text"
                     className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder={language === "hindi" ? "अपना संदेश यहाँ टाइप करें..." : language === "marathi" ? "आपला संदेश येथे टाइप करा..." : "Type your message here..."}
+                    placeholder="Type your message here..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     onKeyPress={handleKeyPress}
