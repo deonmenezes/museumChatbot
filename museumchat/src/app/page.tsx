@@ -151,6 +151,29 @@ const Chatbot: React.FC = () => {
     }
   }
 
+  /* ----warmup server---- */
+
+  const warmUpServer = async () => {
+    try {
+      const response = await fetch(
+        "https://museum-chatbot-api.onrender.com/warmup",
+        { method: "GET" }
+      )
+      if (response.ok) {
+        console.log("Server warmed up successfully")
+      } else {
+        console.warn("Server warm-up request failed")
+      }
+    } catch (error) {
+      console.error("Error warming up server:", error)
+    }
+  }
+
+  // Use this in a useEffect hook or before making your first request
+  useEffect(() => {
+    warmUpServer()
+  }, [])
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
