@@ -75,6 +75,7 @@ const Chatbot: React.FC = () => {
   const handleLanguageSelection = (selectedLanguage: string) => {
     setLanguage(selectedLanguage.toLowerCase())
     setIsLanguageSelected(true)
+    setMessages([{ text: languageOptions[selectedLanguage.toLowerCase()].welcome, sender: "bot" }])
   }
 
   useEffect(() => {
@@ -155,6 +156,7 @@ const Chatbot: React.FC = () => {
             ) : (
               <>
                 <p className="text-gray-700 mt-2">
+                  {languageOptions[language].welcome}
                 </p>
               </>
             )}
@@ -233,12 +235,12 @@ const Chatbot: React.FC = () => {
                     onKeyPress={handleKeyPress}
                   />
                   <button
-  className="ml-2 bg-blue-500 text-white px-6 py-2 rounded-full shadow-sm hover:bg-blue-600 transition"
-  onClick={handleSendMessage}
-  disabled={isLoading}
->
-  {languageOptions[language]?.buttonLabel || "Send"}
-</button>
+                    className="ml-2 bg-blue-500 text-white px-6 py-2 rounded-full shadow-sm hover:bg-blue-600 transition"
+                    onClick={handleSendMessage}
+                    disabled={isLoading}
+                  >
+                    {languageOptions[language].buttonLabel || "send"}
+                  </button>
                 </div>
               </div>
             </div>
