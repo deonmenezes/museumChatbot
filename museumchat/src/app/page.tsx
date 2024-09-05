@@ -9,102 +9,174 @@ const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
 
 const Chatbot: React.FC = () => {
   const [message, setMessage] = useState("")
-  const [messages, setMessages] = useState<{ text: string; sender: string }[]>([])
+  const [messages, setMessages] = useState<{ text: string; sender: string }[]>(
+    []
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [chatHeight, setChatHeight] = useState("40vh")
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const chatContainerRef = useRef<HTMLDivElement | null>(null)
 
-  // Define the type for the language keys
-  type LanguageKey = 'english' | 'hindi' | 'marathi';
+  const [language, setLanguage] = useState("")
+  const [isLanguageSelected, setIsLanguageSelected] = useState(false)
 
-  // State for language selection
-  const [language, setLanguage] = useState<LanguageKey>('english');
-  const [isLanguageSelected, setIsLanguageSelected] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    // price: "",
+    email: "",
+    phone: "",
+    nationality: "",
+    // ticket_type: "",
+    visit_date: "",
+    visit_time: "",
+    adult_tickets: "",
+    child_tickets: "",
+    language: "",
+  })
 
-  // Handle language change
-  const handleLanguageChange = (lang: LanguageKey) => {
-    setLanguage(lang);
-    setIsLanguageSelected(true);
-    setMessages([{ text: languageOptions[lang].welcome, sender: "bot" }]);
-  };
-
-  // Language options text
-  interface LanguageOption {
-    welcome: string;
-    chooseLanguage: string;
-    buttonLabel: string;
-    languages: string[];
-  }
-
-  const languageOptions: Record<LanguageKey, LanguageOption> = {
+  const languageOptions: {
+    [key: string]: {
+      welcome: string
+      chooseLanguage: string
+      buttonLabel: string
+      languages: string[]
+    }
+  } = {
     english: {
-      welcome: "Hello! I'm MuseumBot, your AI assistant for all things museum-related. How can I help you today?",
-      chooseLanguage: "Choose your preferred language:",
+      welcome:
+        "Hello! I'm MuseumBot, your AI assistant for booking museum tickets. How can I help you today?",
+      chooseLanguage:
+        "Please select your preferred language to start the chat:",
       buttonLabel: "Send",
-      languages: ['english', 'hindi', 'marathi'],
+      languages: ["English", "Hindi", "Marathi"],
     },
     hindi: {
-      welcome: "नमस्ते! मैं म्यूज़ियमबोट हूं, आपके सभी संग्रहालय से संबंधित सवालों के लिए आपकी AI सहायक। मैं आपकी किस तरह से मदद कर सकता हूँ?",
-      chooseLanguage: "अपनी पसंदीदा भाषा चुनें:",
+      welcome:
+        "नमस्ते! मैं म्यूजियम बोट हूं, संग्रहालय से संबंधित सभी चीजों के लिए आपका एआई सहायक। मैं आपकी किस प्रकार सहायता कर सकता हूं?",
+      chooseLanguage:
+        "कृपया चैट शुरू करने के लिए अपनी पसंदीदा भाषा का चयन करें:",
       buttonLabel: "भेजें",
-      languages: ['english', 'hindi', 'marathi'],
+      languages: ["अंग्रेजी", "हिंदी", "मराठी"],
     },
     marathi: {
-      welcome: "नमस्कार! मी म्युझियमबोट आहे, संग्रहालयाशी संबंधित सर्व गोष्टींसाठी तुमचा AI सहाय्यक. मी तुम्हाला कशा प्रकारे मदत करू शकतो?",
-      chooseLanguage: "आपली पसंतीची भाषा निवडा:",
+      welcome:
+        "नमस्कार! मी म्युझियम बॉट आहे, संग्रहालयाशी संबंधित सर्व गोष्टींसाठी तुमचा एआय सहायक. मी तुम्हाला कशी मदत करू शकतो?",
+      chooseLanguage: "कृपया चॅट सुरू करण्यासाठी तुमची आवडती भाषा निवडा:",
       buttonLabel: "पाठवा",
-      languages: ['english', 'hindi', 'marathi'],
+      languages: ["इंग्रजी", "हिंदी", "मराठी"],
     },
-  };
+  }
 
-  // Send a message and handle bot's response
-  const handleSendMessage = async () => {
-    if (message.trim() === "") return;
+  const handleLanguageSelection = (selectedLanguage: string) => {
+    const lowerCaseLanguage = selectedLanguage.toLowerCase()
+    setLanguage(lowerCaseLanguage)
+    setIsLanguageSelected(true)
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      language: lowerCaseLanguage,
+    }))
+    setMessages([
+      {
+        text: languageOptions[lowerCaseLanguage].welcome,
+        sender: "bot",
+      },
+    ])
+  }
 
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      { text: message, sender: "user" },
-    ]);
-    setMessage("");
-    setIsLoading(true);
+  const handleSendMessage = async (inputValue: string) => {
+    if (inputValue.trim() === "") return
+
+    setMessages((prev) => [...prev, { text: inputValue, sender: "user" }])
+    setIsLoading(true)
 
     try {
-      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-      const result = await model.generateContent(message);
-      const response = result.response;
-      const text = response.text();
-
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text, sender: "bot" },
-      ]);
+      const response = await handleApiRequest(inputValue)
+      processApiResponse(response)
     } catch (error) {
-      console.error("Error generating response:", error);
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { text: "Sorry, I encountered an error. Please try again.", sender: "bot" },
-      ]);
+      console.error("Error:", error)
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Sorry, there was an error processing your request.",
+          sender: "bot",
+        },
+      ])
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
+      setMessage("")
     }
-  };
+  }
 
-  // Handle enter key press to send message
+  const handleApiRequest = async (input: string) => {
+    const response = await fetch(
+      "https://museum-chatbot-api.onrender.com/chatGemini",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt: input, formData }),
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    return await response.json()
+  }
+
+  const processApiResponse = (data: any) => {
+    const [jsonString, aiResponse] = data.message.split("\n")
+
+    try {
+      const parsedData = JSON.parse(jsonString)
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        ...parsedData,
+      }))
+      console.log("Updated form data:", parsedData)
+    } catch (error) {
+      console.error("Error parsing JSON:", error)
+    }
+
+    setMessages((prev) => [...prev, { text: aiResponse, sender: "bot" }])
+  }
+
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
+    const newHeight = Math.min(80, Math.max(40, messages.length * 10)) + "vh"
+    setChatHeight(newHeight)
+  }, [messages])
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSendMessage();
+      handleSendMessage(message)
     }
-  };
+  }
 
-  // Scroll to the bottom when a new message is added
+  /* ----warmup server---- */
+
+  const warmUpServer = async () => {
+    try {
+      const response = await fetch(
+        "https://museum-chatbot-api.onrender.com/warmup",
+        { method: "GET" }
+      )
+      if (response.ok) {
+        console.log("Server warmed up successfully")
+      } else {
+        console.warn("Server warm-up request failed")
+      }
+    } catch (error) {
+      console.error("Error warming up server:", error)
+    }
+  }
+
+  // Use this in a useEffect hook or before making your first request
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-
-    // Dynamically adjust chat height
-    const newHeight = Math.min(80, Math.max(40, messages.length * 10)) + "vh";
-    setChatHeight(newHeight);
-  }, [messages]);
+    warmUpServer()
+  }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -132,7 +204,7 @@ const Chatbot: React.FC = () => {
                   {languageOptions.english.languages.map((lang, index) => (
                     <button
                       key={index}
-                      onClick={() => handleLanguageChange(lang as LanguageKey)}
+                      onClick={() => handleLanguageSelection(lang)}
                       className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                     >
                       {lang}
@@ -177,7 +249,10 @@ const Chatbot: React.FC = () => {
 
           {/* Chat Display Section */}
           {isLanguageSelected && (
-            <div className="border border-gray-200 rounded-lg shadow-md" ref={chatContainerRef}>
+            <div
+              className="border border-gray-200 rounded-lg shadow-md"
+              ref={chatContainerRef}
+            >
               <div
                 className="overflow-y-auto p-4 transition-all duration-300 ease-in-out"
                 style={{ height: chatHeight }}
@@ -200,30 +275,35 @@ const Chatbot: React.FC = () => {
                     </div>
                   </div>
                 ))}
+                {isLoading && (
+                  <div className="flex justify-start mb-2">
+                    <div className="bg-gray-200 text-gray-800 p-3 rounded-lg rounded-bl-none">
+                      Thinking...
+                    </div>
+                  </div>
+                )}
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Input Section */}
-              <div className="flex border-t border-gray-200 p-4">
-                <input
-                  type="text"
-                  placeholder="Type your message..."
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  className="flex-grow border-2 border-gray-300 rounded-l-lg p-2 focus:outline-none focus:border-blue-500"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  disabled={isLoading}
-                  className={`px-4 py-2 rounded-r-lg ${
-                    isLoading
-                      ? "bg-gray-400 text-gray-600 cursor-not-allowed"
-                      : "bg-blue-500 text-white hover:bg-blue-600"
-                  }`}
-                >
-                  {isLoading ? "..." : languageOptions[language].buttonLabel}
-                </button>
+              {/* Chatbot Input Section */}
+              <div className="border-t border-gray-200 p-4">
+                <div className="flex items-center">
+                  <input
+                    type="text"
+                    className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
+                    placeholder="Type your message here..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                  />
+                  <button
+                    className="ml-2 bg-blue-500 text-white px-6 py-2 rounded-full shadow-sm hover:bg-blue-600 transition"
+                    onClick={() => handleSendMessage(message)}
+                    disabled={isLoading}
+                  >
+                    {languageOptions[language].buttonLabel || "Send"}
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -231,9 +311,9 @@ const Chatbot: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-[#698474] p-4 text-center">
-        <p className="text-[#FCF8F3]">
-          &copy; {new Date().getFullYear()} Museumaire. All rights reserved.
+      <footer className="bg-gray-100 py-4">
+        <p className="text-center text-gray-500 text-sm">
+          © 2024 Indian Museums. All rights reserved.
         </p>
       </footer>
     </div>
