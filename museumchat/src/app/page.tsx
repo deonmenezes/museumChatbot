@@ -15,41 +15,59 @@ const Chatbot: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement | null>(null)
   const chatContainerRef = useRef<HTMLDivElement | null>(null)
 
+  // Define the type for the language keys
+  type LanguageKey = 'english' | 'hindi' | 'marathi';
+
   // State for language selection
-  const [language, setLanguage] = useState("")
-  const [isLanguageSelected, setIsLanguageSelected] = useState(false)
+  const [language, setLanguage] = useState<LanguageKey>('english');
+  const [isLanguageSelected, setIsLanguageSelected] = useState(false);
+
+  // Handle language change
+  const handleLanguageChange = (lang: LanguageKey) => {
+    setLanguage(lang);
+    setIsLanguageSelected(true);
+    setMessages([{ text: languageOptions[lang].welcome, sender: "bot" }]);
+  };
 
   // Language options text
-  const languageOptions = {
-    english: {
-      welcome: "Hello! I'm MuseumBot, your AI assistant for all things museum-related. How can I help you today?",
-      chooseLanguage: "Please select your preferred language to start the chat:",
-      buttonLabel: "Send",
-      languages: ["English", "Hindi", "Marathi"],
-    },
-    hindi: {
-      welcome: "नमस्ते! मैं म्यूजियम बोट हूं, संग्रहालय से संबंधित सभी चीजों के लिए आपका एआई सहायक। मैं आपकी किस प्रकार सहायता कर सकता हूं?",
-      chooseLanguage: "कृपया चैट शुरू करने के लिए अपनी पसंदीदा भाषा का चयन करें:",
-      buttonLabel: "भेजें",
-      languages: ["अंग्रेजी", "हिंदी", "मराठी"],
-    },
-    marathi: {
-      welcome: "नमस्कार! मी म्युझियम बॉट आहे, संग्रहालयाशी संबंधित सर्व गोष्टींसाठी तुमचा एआय सहायक. मी तुम्हाला कशी मदत करू शकतो?",
-      chooseLanguage: "कृपया चॅट सुरू करण्यासाठी तुमची आवडती भाषा निवडा:",
-      buttonLabel: "पाठवा",
-      languages: ["इंग्रजी", "हिंदी", "मराठी"],
-    },
+  interface LanguageOption {
+    welcome: string;
+    chooseLanguage: string;
+    buttonLabel: string;
+    languages: string[];
   }
 
+  const languageOptions: Record<LanguageKey, LanguageOption> = {
+    english: {
+      welcome: "Hello! I'm MuseumBot, your AI assistant for all things museum-related. How can I help you today?",
+      chooseLanguage: "Choose your preferred language:",
+      buttonLabel: "Send",
+      languages: ['english', 'hindi', 'marathi'],
+    },
+    hindi: {
+      welcome: "नमस्ते! मैं म्यूज़ियमबोट हूं, आपके सभी संग्रहालय से संबंधित सवालों के लिए आपकी AI सहायक। मैं आपकी किस तरह से मदद कर सकता हूँ?",
+      chooseLanguage: "अपनी पसंदीदा भाषा चुनें:",
+      buttonLabel: "भेजें",
+      languages: ['english', 'hindi', 'marathi'],
+    },
+    marathi: {
+      welcome: "नमस्कार! मी म्युझियमबोट आहे, संग्रहालयाशी संबंधित सर्व गोष्टींसाठी तुमचा AI सहाय्यक. मी तुम्हाला कशा प्रकारे मदत करू शकतो?",
+      chooseLanguage: "आपली पसंतीची भाषा निवडा:",
+      buttonLabel: "पाठवा",
+      languages: ['english', 'hindi', 'marathi'],
+    },
+  };
+
+  // Send a message and handle bot's response
   const handleSendMessage = async () => {
-    if (message.trim() === "") return
+    if (message.trim() === "") return;
 
     setMessages((prevMessages) => [
       ...prevMessages,
       { text: message, sender: "user" },
-    ])
-    setMessage("")
-    setIsLoading(true)
+    ]);
+    setMessage("");
+    setIsLoading(true);
 
     try {
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
@@ -60,37 +78,33 @@ const Chatbot: React.FC = () => {
       setMessages((prevMessages) => [
         ...prevMessages,
         { text, sender: "bot" },
-      ])
+      ]);
     } catch (error) {
-      console.error("Error generating response:", error)
+      console.error("Error generating response:", error);
       setMessages((prevMessages) => [
         ...prevMessages,
         { text: "Sorry, I encountered an error. Please try again.", sender: "bot" },
-      ])
+      ]);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
-  const handleLanguageSelection = (selectedLanguage: string) => {
-    setLanguage(selectedLanguage.toLowerCase())
-    setIsLanguageSelected(true)
-    setMessages([{ text: languageOptions[selectedLanguage.toLowerCase()].welcome, sender: "bot" }])
-  }
-
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
-
-    // Dynamically adjust chat height
-    const newHeight = Math.min(80, Math.max(40, messages.length * 10)) + "vh"
-    setChatHeight(newHeight)
-  }, [messages])
-
+  // Handle enter key press to send message
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      handleSendMessage()
+      handleSendMessage();
     }
-  }
+  };
+
+  // Scroll to the bottom when a new message is added
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+
+    // Dynamically adjust chat height
+    const newHeight = Math.min(80, Math.max(40, messages.length * 10)) + "vh";
+    setChatHeight(newHeight);
+  }, [messages]);
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -145,7 +159,7 @@ const Chatbot: React.FC = () => {
                   {languageOptions.english.languages.map((lang, index) => (
                     <button
                       key={index}
-                      onClick={() => handleLanguageSelection(lang)}
+                      onClick={() => handleLanguageChange(lang as LanguageKey)}
                       className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition"
                     >
                       {lang}
@@ -213,35 +227,30 @@ const Chatbot: React.FC = () => {
                     </div>
                   </div>
                 ))}
-                {isLoading && (
-                  <div className="flex justify-start mb-2">
-                    <div className="bg-gray-200 text-gray-800 p-3 rounded-lg rounded-bl-none">
-                      Thinking...
-                    </div>
-                  </div>
-                )}
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Chatbot Input Section */}
-              <div className="border-t border-gray-200 p-4">
-                <div className="flex items-center">
-                  <input
-                    type="text"
-                    className="flex-1 border border-gray-300 rounded-full px-4 py-2 text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    placeholder="Type your message here..."
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    onKeyPress={handleKeyPress}
-                  />
-                  <button
-                    className="ml-2 bg-blue-500 text-white px-6 py-2 rounded-full shadow-sm hover:bg-blue-600 transition"
-                    onClick={handleSendMessage}
-                    disabled={isLoading}
-                  >
-                    {languageOptions[language].buttonLabel || "send"}
-                  </button>
-                </div>
+              {/* Input Section */}
+              <div className="flex border-t border-gray-200 p-4">
+                <input
+                  type="text"
+                  placeholder="Type your message..."
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  onKeyPress={handleKeyPress}
+                  className="flex-grow border-2 border-gray-300 rounded-l-lg p-2 focus:outline-none focus:border-blue-500"
+                />
+                <button
+                  onClick={handleSendMessage}
+                  disabled={isLoading}
+                  className={`px-4 py-2 rounded-r-lg ${
+                    isLoading
+                      ? "bg-gray-400 text-gray-600 cursor-not-allowed"
+                      : "bg-blue-500 text-white hover:bg-blue-600"
+                  }`}
+                >
+                  {isLoading ? "..." : languageOptions[language].buttonLabel}
+                </button>
               </div>
             </div>
           )}
@@ -249,9 +258,9 @@ const Chatbot: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 py-4">
-        <p className="text-center text-gray-500 text-sm">
-          © 2024 Indian Museums. All rights reserved.
+      <footer className="bg-[#698474] p-4 text-center">
+        <p className="text-[#FCF8F3]">
+          &copy; {new Date().getFullYear()} Museumaire. All rights reserved.
         </p>
       </footer>
     </div>
