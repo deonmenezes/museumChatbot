@@ -233,11 +233,12 @@ const Chatbot: React.FC = () => {
                     onKeyPress={handleKeyPress}
                   />
                   <button
-                    className="ml-2 bg-blue-500 text-white px-6 py-2 rounded-full shadow-sm hover:bg-blue-600 transition"
-                    onClick={handleSendMessage}
-                    disabled={isLoading}
-                  >
-                  </button>
+  className="ml-2 bg-blue-500 text-white px-6 py-2 rounded-full shadow-sm hover:bg-blue-600 transition"
+  onClick={handleSendMessage}
+  disabled={isLoading}
+>
+  {languageOptions[language]?.buttonLabel || "Send"}
+</button>
                 </div>
               </div>
             </div>
