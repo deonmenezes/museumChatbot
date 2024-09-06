@@ -24,7 +24,7 @@ export default function RootLayout({
             <h1 className="text-[#FCF8F3] text-3xl font-bold">Museumaire</h1>
             <ul className="flex space-x-4">
               <li>
-                <Link href="/" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
+                <Link href="/payment.tsx" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
                   Home
                 </Link>
               </li>
