@@ -5,7 +5,7 @@ import Link from "next/link"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import MuseumSearch from "./components/search.tsx"
 // Initialize the Gemini API
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!);
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!)
 
 const Chatbot: React.FC = () => {
   const [message, setMessage] = useState("")
@@ -19,6 +19,12 @@ const Chatbot: React.FC = () => {
 
   const [language, setLanguage] = useState("")
   const [isLanguageSelected, setIsLanguageSelected] = useState(false)
+
+  //create a user id
+  const [userId, setUserId] = useState<string>("")
+  const generateUserId = () => {
+    return `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  }
 
   const [formData, setFormData] = useState({
     name: "",
@@ -115,7 +121,7 @@ const Chatbot: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: input, formData }),
+        body: JSON.stringify({ prompt: input, formData, userId }),
       }
     )
 
@@ -149,6 +155,12 @@ const Chatbot: React.FC = () => {
     setChatHeight(newHeight)
   }, [messages])
 
+  useEffect(() => {
+    const newUserId = generateUserId()
+    setUserId(newUserId)
+    console.log("Generated User ID:", newUserId)
+  }, [])
+
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSendMessage(message)
@@ -181,7 +193,7 @@ const Chatbot: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
-      
+
       {/* Main Content */}
       <div className="flex-grow bg-white p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
@@ -309,8 +321,6 @@ const Chatbot: React.FC = () => {
           )}
         </div>
       </div>
-
-      
     </div>
   )
 }
