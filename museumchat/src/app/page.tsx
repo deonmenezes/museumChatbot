@@ -48,7 +48,7 @@ const Chatbot: React.FC = () => {
       chooseLanguage:
         "Please select your preferred language to start the chat:",
       buttonLabel: "Send",
-      languages: ["English", "Hindi", "Marathi"],
+      languages: ["English", "हिन्दी", "मराठी"],
     },
     hindi: {
       welcome:
