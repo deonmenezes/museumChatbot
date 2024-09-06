@@ -88,7 +88,7 @@ const MuseumExplore = () => {
             cards={[
               { title: "Forest Adventure", src: "/banner.jpeg" },
               { title: "Valley of Life", src: "/banner.jpeg" },
-              { title: "Sala Behta Hi Jayega", src: "/banner.jpeg" },
+              { title: " Behta Hi Jayega", src: "/banner.jpeg" },
             ]}
           />
 
@@ -98,11 +98,11 @@ const MuseumExplore = () => {
             cards={[
               { title: "Forest Adventure", src: "/banner.jpeg" },
               { title: "Valley of Life", src: "/banner.jpeg" },
-              { title: "Sala Behta Hi Jayega", src: "/banner.jpeg" },
+              { title: " Behta Hi Jayega", src: "/banner.jpeg" },
             ]}
           />
         </div>
-      </section>
+      </section>  
 
       
     </>
