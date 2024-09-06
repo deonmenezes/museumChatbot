@@ -1,35 +1,34 @@
-import { FocusCards } from "@/app/components/ui/focus-cards";
-import { InfiniteMovingCards } from "@/app/components/ui/moving-cards";
-import Image from 'next/image';
-import Museums from "../components/museums.tsx";
+"use client"
+import { FocusCards } from "@/app/components/ui/focus-cards"
+import { InfiniteMovingCards } from "@/app/components/ui/moving-cards"
+import Slideshow from "@/app/components/slideshow.tsx/index"
+import Image from "next/image"
+import Museums from "../components/museums.tsx"
 
 const MuseumExplore = () => {
+  const images = [
+    "highres1.jpeg",
+    "highres2.jpeg",
+    "highres3.jpg",
+    // "highres4.jpg",
+    // "highres5.jpg",
+  ]
+
   return (
     <>
-      <div id="controls-carousel" className="relative w-full" data-carousel="static">
-        <div className="relative h-56 overflow-hidden rounded-lg md:h-96">
-          {[1, 2, 3, 4, 5].map((index) => (
-            <div
-              key={index}
-              className={`duration-700 ease-in-out transform transition-opacity ${index === 2 ? 'opacity-100' : 'opacity-0'}`}
-              data-carousel-item={index === 2 ? 'active' : undefined}
-            >
-              <Image
-                src="/banner.webp" // Use WebP format if available
-                alt={`Banner ${index}`}
-                layout="fill"
-                objectFit="cover"
-                quality={100}
-                priority={index === 2}
-                className="rounded-lg shadow-md"
-              />
+      <div
+        id="controls-carousel"
+        className="relative w-full"
+        data-carousel="static"
+      >
+        <Slideshow
+          slides={images.map((image) => ({
+            image: `/${image}`,
+            caption: "Museum",
+          }))}
+        />
 
-
-            </div>
-          ))}
-        </div>
-
-        <button
+        {/* <button
           type="button"
           className="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
           data-carousel-prev
@@ -77,28 +76,47 @@ const MuseumExplore = () => {
             </svg>
             <span className="sr-only">Next</span>
           </span>
-        </button>
+        </button> */}
       </div>
 
       <section className="py-16 bg-gradient-to-b from-white to-gray-100">
         <div className="container mx-auto text-center">
-          <h3 className="text-4xl font-semibold text-green-600 mb-8 animate-fadeInUp">Museums by Categories</h3>
+          <h3 className="text-4xl font-semibold text-green-600 mb-8 animate-fadeInUp">
+            Museums by Categories
+          </h3>
 
           <FocusCards
             cards={[
-              { title: "Forest Adventure", src: "/banner.jpeg" },
-              { title: "Valley of Life", src: "/banner.jpeg" },
-              { title: "Sala Behta Hi Jayega", src: "/banner.jpeg" },
+              { title: "Forest Adventure", src: "/images.jpg" },
+              {
+                title: "Valley of Life",
+                src: "/Inside-Sarnath-Museum-Varanasi.jpg",
+              },
+              {
+                title: "Sala Behta Hi Jayega",
+                src: "/indian_museum_banner.jpg",
+              },
             ]}
           />
 
-          <h3 className="text-4xl font-semibold text-green-600 mt-16 mb-8 p-12 animate-fadeInUp">Popular Museums</h3>
+          <h3 className="text-4xl font-semibold text-green-600 mt-16 mb-8 p-12 animate-fadeInUp">
+            Popular Museums
+          </h3>
 
           <FocusCards
             cards={[
-              { title: "Forest Adventure", src: "/banner.jpeg" },
-              { title: "Valley of Life", src: "/banner.jpeg" },
-              { title: "Sala Behta Hi Jayega", src: "/banner.jpeg" },
+              {
+                title: "Forest Adventure",
+                src: "/Courtyard-Indian-Museum-Kolkata-India.webp",
+              },
+              {
+                title: "Valley of Life",
+                src: "/famous-museums-in-india2.jpg",
+              },
+              {
+                title: "Sala Behta Hi Jayega",
+                src: "/Hawa-Mahal-Jaipur.jpg",
+              },
             ]}
           />
         </div>
@@ -109,7 +127,8 @@ const MuseumExplore = () => {
           <div>
             <h4 className="text-xl font-bold">About Medisins</h4>
             <p className="mt-4">
-              Medisins is your trusted online pharmacy offering a wide range of medicines and healthcare products.
+              Medisins is your trusted online pharmacy offering a wide range of
+              medicines and healthcare products.
             </p>
           </div>
           <div>
@@ -164,7 +183,7 @@ const MuseumExplore = () => {
         </div>
       </footer>
     </>
-  );
-};
+  )
+}
 
-export default MuseumExplore;
+export default MuseumExplore
