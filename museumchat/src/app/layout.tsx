@@ -57,6 +57,12 @@ export default function RootLayout({
           </div>
         </nav>
         <main>{children}</main>
+        {/* Footer */}
+      <footer className="bg-gray-100 py-4">
+        <p className="text-center text-gray-500 text-sm">
+          © 2024 Indian Museums. All rights reserved.
+        </p>
+      </footer>
       </body>
     </html>
   );

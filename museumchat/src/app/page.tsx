@@ -310,12 +310,7 @@ const Chatbot: React.FC = () => {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-gray-100 py-4">
-        <p className="text-center text-gray-500 text-sm">
-          © 2024 Indian Museums. All rights reserved.
-        </p>
-      </footer>
+      
     </div>
   )
 }
