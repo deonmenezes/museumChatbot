@@ -121,67 +121,6 @@ const MuseumExplore = () => {
           />
         </div>
       </section>
-
-      <footer className="bg-green-600 text-white py-10">
-        <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h4 className="text-xl font-bold">About Medisins</h4>
-            <p className="mt-4">
-              Medisins is your trusted online pharmacy offering a wide range of
-              medicines and healthcare products.
-            </p>
-          </div>
-          <div>
-            <h4 className="text-xl font-bold">Customer Service</h4>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <a href="#" className="hover:underline flex items-center">
-                  <svg
-                    className="w-4 h-4 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M3 10h4l1-5h9l1 5h4"
-                    />
-                  </svg>
-                  Contact Us
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  FAQs
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Shipping & Returns
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="text-xl font-bold">Legal</h4>
-            <ul className="mt-4 space-y-2">
-              <li>
-                <a href="#" className="hover:underline">
-                  Privacy Policy
-                </a>
-              </li>
-              <li>
-                <a href="#" className="hover:underline">
-                  Terms of Service
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </footer>
     </>
   )
 }
