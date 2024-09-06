@@ -1,0 +1,15 @@
+.clickHereToPay:hover {
+  color: blue;
+}
+
+.payButton {
+  color: white;
+  border: none;
+  border-radius: 10px;
+  border: 1px solid black;
+  padding: 10px;
+}
+
+.payButton a {
+  color: black;
+}
