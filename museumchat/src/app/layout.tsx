@@ -23,13 +23,9 @@ export default function RootLayout({
           <div className="flex justify-between items-center max-w-7xl mx-auto">
             <h1 className="text-[#FCF8F3] text-3xl font-bold">Museumaire</h1>
             <ul className="flex space-x-4">
+              
               <li>
                 <Link href="/payment.tsx" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/faqs" className="text-[#FCF8F3] hover:text-[#FFD3B6]">
                   FAQs
                 </Link>
               </li>

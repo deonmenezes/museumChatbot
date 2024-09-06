@@ -4,20 +4,20 @@ import Image from 'next/image';
 const ContactPage: React.FC = () => {
   return (
     <div className="font-sans">
-      <div className="bg-green-300 text-white text-center py-12 md:py-16 lg:py-20">
+      <div className="bg-green-500 text-white text-center py-12 md:py-16 lg:py-20">
         <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold m-0 h-20">Contact Us</h3>
       </div>
 
       <div className="flex flex-col md:flex-row justify-around items-center p-5">
         <ContactCard
-          imageSrc="/frontend_of_museum/contact_page/pic1.jpg"
+          imageSrc="/pic1.jpg"
           title="K.J. Somaiya College of Engineering"
           phone="(123) 456-7890"
           linkedin="https://www.linkedin.com/school/kj-somaiya-college-of-engineering-vidyavihar/mycompany/"
           instagram="https://www.instagram.com/kjsomaiyacollegeofengineering/"
         />
         <ContactCard
-          imageSrc="/frontend_of_museum/contact_page/pic2.jpg"
+          imageSrc="/pic2.jpg"
           title="Somaiya Vidyavihar University"
           phone="(987) 654-3210"
           linkedin="https://www.linkedin.com/school/somaiya-vidyavihar-university/"

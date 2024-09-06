@@ -87,13 +87,13 @@ const MuseumExplore = () => {
 
           <FocusCards
             cards={[
-              { title: "Forest Adventure", src: "/images.jpg" },
+              { title: "Art Museum", src: "/images.jpg" },
               {
                 title: "Valley of Life",
                 src: "/Inside-Sarnath-Museum-Varanasi.jpg",
               },
               {
-                title: "Sala Behta Hi Jayega",
+                title: "War Museum",
                 src: "/indian_museum_banner.jpg",
               },
             ]}
@@ -106,15 +106,15 @@ const MuseumExplore = () => {
           <FocusCards
             cards={[
               {
-                title: "Forest Adventure",
+                title: "Prince of Wales",
                 src: "/Courtyard-Indian-Museum-Kolkata-India.webp",
               },
               {
-                title: "Valley of Life",
+                title: "Indian Museum",
                 src: "/famous-museums-in-india2.jpg",
               },
               {
-                title: "Sala Behta Hi Jayega",
+                title: "City Palace",
                 src: "/Hawa-Mahal-Jaipur.jpg",
               },
             ]}
