@@ -96,6 +96,10 @@ const MuseumExplore = () => {
                 title: "War Museum",
                 src: "/indian_museum_banner.jpg",
               },
+              {
+                title: "Indian Museum",
+                src: "/famous-museums-in-india2.jpg",
+              },
             ]}
           />
 
@@ -111,6 +115,10 @@ const MuseumExplore = () => {
               },
               {
                 title: "Indian Museum",
+                src: "/famous-museums-in-india2.jpg",
+              },
+              {
+                title: "Museum",
                 src: "/famous-museums-in-india2.jpg",
               },
               {

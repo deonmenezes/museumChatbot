@@ -29,11 +29,9 @@ export const Card = React.memo(
         fill
         className="object-cover absolute inset-0"
       />
+      {/* Make title always visible */}
       <div
-        className={cn(
-          "absolute inset-0 bg-black/50 flex items-end py-8 px-4 transition-opacity duration-300",
-          hovered === index ? "opacity-100" : "opacity-0"
-        )}
+        className="absolute inset-0 bg-black/50 flex items-end py-8 px-4"
       >
         <div className="text-xl md:text-2xl font-medium bg-clip-text text-transparent bg-gradient-to-b from-neutral-50 to-neutral-200">
           {card.title}
@@ -54,7 +52,7 @@ export function FocusCards({ cards }: { cards: Card[] }) {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto md:px-8 w-full">
+    <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-5 max-w-8xl mx-auto md:px-8 w-full">
       {cards.map((card, index) => (
         <Card
           key={card.title}
