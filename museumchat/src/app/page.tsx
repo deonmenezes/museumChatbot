@@ -4,6 +4,7 @@ import React, { useState, useRef, useEffect } from "react"
 import Link from "next/link"
 import { GoogleGenerativeAI } from "@google/generative-ai"
 import MuseumSearch from "./components/search.tsx"
+
 // Initialize the Gemini API
 const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY!)
 
@@ -28,11 +29,9 @@ const Chatbot: React.FC = () => {
 
   const [formData, setFormData] = useState({
     name: "",
-    // price: "",
     email: "",
     phone: "",
     nationality: "",
-    // ticket_type: "",
     visit_date: "",
     visit_time: "",
     adult_tickets: "",
@@ -54,7 +53,7 @@ const Chatbot: React.FC = () => {
       chooseLanguage:
         "Please select your preferred language to start the chat:",
       buttonLabel: "Send",
-      languages: ["English", "हिन्दी", "मराठी "],
+      languages: ["English", "हिन्दी", "मराठी"],
     },
     hindi: {
       welcome:
@@ -74,19 +73,36 @@ const Chatbot: React.FC = () => {
   }
 
   const handleLanguageSelection = (selectedLanguage: string) => {
-    const lowerCaseLanguage = selectedLanguage.toLowerCase()
-    setLanguage(lowerCaseLanguage)
-    setIsLanguageSelected(true)
+    let lowerCaseLanguage = selectedLanguage.toLowerCase();
+    
+    // Map the displayed language names to their corresponding keys
+    const languageMap: { [key: string]: string } = {
+      "english": "english",
+      "अंग्रेजी": "english",
+      "इंग्रजी": "english",
+      "hindi": "hindi",
+      "हिन्दी": "hindi",
+      "हिंदी": "hindi",
+      "marathi": "marathi",
+      "मराठी": "marathi"
+    };
+
+    lowerCaseLanguage = languageMap[lowerCaseLanguage] || "english";
+
+    setLanguage(lowerCaseLanguage);
+    setIsLanguageSelected(true);
     setFormData((prevFormData) => ({
       ...prevFormData,
       language: lowerCaseLanguage,
-    }))
+    }));
+
+    const welcomeMessage = languageOptions[lowerCaseLanguage].welcome;
     setMessages([
       {
-        text: languageOptions[lowerCaseLanguage].welcome,
+        text: welcomeMessage,
         sender: "bot",
       },
-    ])
+    ]);
   }
 
   const handleSendMessage = async (inputValue: string) => {
@@ -167,8 +183,6 @@ const Chatbot: React.FC = () => {
     }
   }
 
-  /* ----warmup server---- */
-
   const warmUpServer = async () => {
     try {
       const response = await fetch(
@@ -185,20 +199,15 @@ const Chatbot: React.FC = () => {
     }
   }
 
-  // Use this in a useEffect hook or before making your first request
   useEffect(() => {
     warmUpServer()
   }, [])
 
   return (
     <div className="flex flex-col min-h-screen">
-      {/* Navbar */}
-
-      {/* Main Content */}
       <div className="flex-grow bg-white p-8 overflow-y-auto">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
-            {/* Profile Section */}
             <img
               src="/museum.jpg"
               alt="MuseumBot"
@@ -206,7 +215,6 @@ const Chatbot: React.FC = () => {
             />
             <h1 className="text-3xl font-bold text-blue-800">Museumaire</h1>
 
-            {/* Language Selection */}
             {!isLanguageSelected ? (
               <div>
                 <p className="text-gray-700 mt-2">
@@ -225,15 +233,12 @@ const Chatbot: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <>
-                <p className="text-gray-700 mt-2">
-                  {languageOptions[language].welcome}
-                </p>
-              </>
+              <p className="text-gray-700 mt-2">
+                {languageOptions[language].welcome}
+              </p>
             )}
           </div>
 
-          {/* Service Options - Display only after language selection */}
           {isLanguageSelected && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               <Link href="/exploremuseum.tsx">
@@ -259,8 +264,7 @@ const Chatbot: React.FC = () => {
             </div>
           )}
 
-          {/* Chat Display Section */}
-          {isLanguageSelected && (
+{isLanguageSelected && (
             <div
               className="border border-gray-200 rounded-lg shadow-md"
               ref={chatContainerRef}
@@ -274,21 +278,40 @@ const Chatbot: React.FC = () => {
                     key={index}
                     className={`flex ${
                       msg.sender === "user" ? "justify-end" : "justify-start"
-                    } mb-2`}
+                    } mb-2 items-end`}
                   >
+                    {msg.sender === "bot" && (
+                      <img
+                        src="/museum.jpg" // Replace with your bot icon image path
+                        alt="MuseumBot icon"
+                        className="w-8 h-8 rounded-full mr-2"
+                      />
+                    )}
                     <div
                       className={`max-w-[70%] p-3 rounded-lg ${
                         msg.sender === "user"
-                          ? "bg-blue-500 text-white self-end rounded-br-none"
-                          : "bg-gray-200 text-gray-800 self-start rounded-bl-none"
+                          ? "bg-blue-500 text-white rounded-br-none"
+                          : "bg-gray-200 text-gray-800 rounded-bl-none"
                       }`}
                     >
                       {msg.text}
                     </div>
+                    {msg.sender === "user" && (
+                      <img
+                        src="/chatuser.png" // Replace with your user icon image path
+                        alt="User icon"
+                        className="w-8 h-8 rounded-full ml-2"
+                      />
+                    )}
                   </div>
                 ))}
                 {isLoading && (
-                  <div className="flex justify-start mb-2">
+                  <div className="flex justify-start mb-2 items-end">
+                    <img
+                      src="/museum.jpg" // Replace with your bot icon image path
+                      alt="MuseumBot icon"
+                      className="w-8 h-8 rounded-full mr-2"
+                    />
                     <div className="bg-gray-200 text-gray-800 p-3 rounded-lg rounded-bl-none">
                       Thinking...
                     </div>
@@ -297,7 +320,6 @@ const Chatbot: React.FC = () => {
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* Chatbot Input Section */}
               <div className="border-t border-gray-200 p-4">
                 <div className="flex items-center">
                   <input
